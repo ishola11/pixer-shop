@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config');
 
+// Log environment variables to verify they're being passed
+console.log('NEXT_PUBLIC_REST_API_ENDPOINT:', process.env.NEXT_PUBLIC_REST_API_ENDPOINT);
+console.log('NEXT_PUBLIC_WEBSITE_URL:', process.env.NEXT_PUBLIC_WEBSITE_URL);
+console.log('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:', process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
 module.exports = {
   reactStrictMode: true,
   i18n,
@@ -23,9 +28,4 @@ module.exports = {
       ignoreDuringBuilds: true,
     },
   }),
-  env: {
-    NEXT_PUBLIC_REST_API_ENDPOINT: process.env.NEXT_PUBLIC_REST_API_ENDPOINT,
-    NEXT_PUBLIC_WEBSITE_URL: process.env.NEXT_PUBLIC_WEBSITE_URL,
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-  },
 };
