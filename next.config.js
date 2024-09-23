@@ -1,24 +1,12 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config');
 
-// Log environment variables to verify they're being passed
-if (process.env.NEXT_PUBLIC_REST_API_ENDPOINT) {
-  console.log('NEXT_PUBLIC_REST_API_ENDPOINT is set');
-} else {
-  console.log('NEXT_PUBLIC_REST_API_ENDPOINT is NOT set');
-}
-
-if (process.env.NEXT_PUBLIC_WEBSITE_URL) {
-  console.log('NEXT_PUBLIC_WEBSITE_URL is set');
-} else {
-  console.log('NEXT_PUBLIC_WEBSITE_URL is NOT set');
-}
-
-if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-  console.log('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is set');
-} else {
-  console.log('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is NOT set');
-}
+// const runtimeCaching = require('next-pwa/cache');
+// const withPWA = require('next-pwa')({
+//   disable: process.env.NODE_ENV === 'development',
+//   dest: 'public',
+//   runtimeCaching,
+// });
 
 module.exports = {
   reactStrictMode: true,
