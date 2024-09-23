@@ -1,13 +1,6 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config');
 
-// const runtimeCaching = require('next-pwa/cache');
-// const withPWA = require('next-pwa')({
-//   disable: process.env.NODE_ENV === 'development',
-//   dest: 'public',
-//   runtimeCaching,
-// });
-
 module.exports = {
   reactStrictMode: true,
   i18n,
@@ -30,4 +23,9 @@ module.exports = {
       ignoreDuringBuilds: true,
     },
   }),
+  env: {
+    NEXT_PUBLIC_REST_API_ENDPOINT: process.env.NEXT_PUBLIC_REST_API_ENDPOINT,
+    NEXT_PUBLIC_WEBSITE_URL: process.env.NEXT_PUBLIC_WEBSITE_URL,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  },
 };
