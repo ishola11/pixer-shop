@@ -20,6 +20,7 @@ module.exports = {
       's3.amazonaws.com',
       'pixarlaravel.s3.ap-southeast-1.amazonaws.com',
       'pickbazarlaravel.s3.ap-southeast-1.amazonaws.com',
+      'api.poducty.com',
     ],
   },
   ...(process.env.APPLICATION_MODE === 'production' && {
