@@ -103,20 +103,21 @@ export function Sidebar({
               href={routes.popularProducts}
               isCollapse={isCollapse}
               icon={<ProductIcon className="h-4 w-4 text-current" />}
-            />
-            <NavLink
+            />      
+            
+            {/*<NavLink
               title={t('text-top-authors')}
               href={routes.authors}
               isCollapse={isCollapse}
               icon={<PeopleIcon className="h-[18px] w-[18px] text-current" />}
-            />
+            />*/}
 
-            <NavLink
+            {/*<NavLink
               title={t('text-feed')}
               href={routes.feed}
               isCollapse={isCollapse}
               icon={<FeedIcon className="h-[17px] w-[17px] text-current" />}
-            />
+            />*/}
 
             <NavLink
               title={t('text-contact')}
@@ -127,14 +128,14 @@ export function Sidebar({
               }
             />
 
-            <NavLink
+            {/*<NavLink
               title="Became seller"
               href={routes.becomeSeller}
               isCollapse={isCollapse}
               icon={
                 <PaperPlaneIcon className="h-[18px] w-[18px] text-current" />
               }
-            />
+            />*/}
           </nav>
 
           <nav className="mt-auto flex flex-col pb-4">
