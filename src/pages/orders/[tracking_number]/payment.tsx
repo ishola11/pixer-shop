@@ -128,6 +128,26 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
                 <h2 className="mb-6 text-base font-medium dark:text-white">
                   {t('text-order-details')}
                 </h2>
+
+                {/* ✅ Display Software Keys */}
+                {order?.software_keys?.length > 0 && (
+                  <div className="mt-6 border border-gray-200 p-4 rounded-md dark:border-dark-600">
+                    <h3 className="mb-4 text-lg font-semibold text-dark dark:text-light">
+                      {t('text-software-license-keys')}
+                    </h3>
+                    <ul>
+                      {order.software_keys.map((key) => (
+                        <li key={key.id} className="mb-2 text-sm text-dark dark:text-light">
+                          <strong>{t('text-key')}: </strong>
+                          <span className="font-mono px-2 py-1 bg-gray-100 rounded-md dark:bg-dark-400">
+                            {key.license_key}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 <div>
                   <Listitem
                     title={t('text-total-item')}
@@ -166,6 +186,7 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
                 status={order?.payment_status as PaymentStatus}
               />
             </div>
+            
             {/* {!isEmpty(order?.children) ? (
               <div className="mt-10">
                 <h2 className="mb-6 text-base font-medium dark:text-white">

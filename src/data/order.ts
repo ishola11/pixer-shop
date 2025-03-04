@@ -66,13 +66,27 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
     isFetchingNextPage,
   } = useInfiniteQuery<OrderedFilePaginator, Error>(
     [API_ENDPOINTS.ORDERS_DOWNLOADS, formattedOptions],
-    ({ queryKey, pageParam }) =>
-      client.orders.downloadable(Object.assign({}, queryKey[1], pageParam)),
+    async ({ queryKey, pageParam }) => {
+      const response = await client.orders.downloadable(Object.assign({}, queryKey[1], pageParam));
+      
+      // Ensure software keys are included
+      return {
+        ...response,
+        pages: response.pages.map((page) => ({
+          ...page,
+          data: page.data.map((order) => ({
+            ...order,
+            software_keys: order.software_keys ?? [],
+          })),
+        })),
+      };
+    },
     {
       getNextPageParam: ({ current_page, last_page }) =>
         last_page > current_page && { page: current_page + 1 },
     }
   );
+
   function handleLoadMore() {
     fetchNextPage();
   }
@@ -93,9 +107,16 @@ export function useOrder({ tracking_number }: { tracking_number: string }) {
     Error
   >(
     [API_ENDPOINTS.ORDERS, tracking_number],
-    () => client.orders.get(tracking_number),
+    async () => {
+      const response = await client.orders.get(tracking_number);
+      return {
+        ...response,
+        software_keys: response.software_keys ?? [],
+      };
+    },
     { refetchOnWindowFocus: false }
   );
+
   return {
     order: data,
     isFetching,
