@@ -107,23 +107,17 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
 }
 
 export function useOrder({ tracking_number }: { tracking_number: string }) {
-  const { data, isLoading, error, isFetching, refetch } = useQuery<
-    Order,
-    Error
-  >(
+  const { data, isLoading, error, isFetching, refetch } = useQuery<Order, Error>(
     [API_ENDPOINTS.ORDERS, tracking_number],
     async () => {
       const response = await client.orders.get(tracking_number);
-      return {
-        ...response,
-        software_keys: response.software_keys ?? [],
-      };
+      return response;
     },
     { refetchOnWindowFocus: false }
   );
 
   return {
-    order: data,
+    order: data ?? undefined,
     isFetching,
     isLoading,
     refetch,
