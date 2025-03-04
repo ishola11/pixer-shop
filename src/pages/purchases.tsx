@@ -85,6 +85,21 @@ function OrderedItem({ item }: { item: OrderedFile }) {
             {t('text-purchased-on')}{' '}
             {dayjs(item.updated_at).format('MMM D, YYYY')}
           </p>
+
+        {/* Show Software License Keys */}
+        {item?.order?.software_keys?.length > 0 && (
+          <div className="border border-gray-200 p-4 rounded-md dark:border-dark-600">
+            <h4 className="mb-2 text-sm font-semibold">Software License Keys</h4>
+            <ul>
+            {item.order?.software_keys?.map((key) => (
+                <li key={key.id ?? key.license_key} className="text-xs font-mono bg-gray-100 px-2 py-1 rounded-md dark:bg-dark-400">
+                  {key?.license_key ?? "No Key"}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
           <h3
             className="my-1.5 font-medium text-dark dark:text-light sm:mb-3"
             title={name}

@@ -51,10 +51,7 @@ export function useOrders(options?: OrderQueryOptions) {
   };
 }
 export function useDownloadableProductOrders(options?: OrderQueryOptions) {
-  const formattedOptions = {
-    ...options,
-    // language: locale
-  };
+  const formattedOptions = { ...options };
 
   const {
     data,
@@ -67,7 +64,9 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
   } = useInfiniteQuery<OrderedFilePaginator, Error>(
     [API_ENDPOINTS.ORDERS_DOWNLOADS, formattedOptions],
     async ({ queryKey, pageParam }) => {
-      const response = await client.orders.downloadable(Object.assign({}, queryKey[1], pageParam));
+      const response = await client.orders.downloadable(
+        Object.assign({}, queryKey[1], pageParam)
+      );
 
       if (!response || !response.pages) {
         return { pages: [{ data: [] }] }; 
@@ -79,15 +78,15 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
           ...page,
           data: page.data.map((order) => ({
             ...order,
-            software_keys: order?.software_keys ?? [],
-            order: order ?? {},
+            software_keys: order?.software_keys ?? [],  // Ensure software_keys is always an array
+            order: order ?? { id: null },  // Ensure order is never undefined
           })),
         })),
-      };      
+      };
     },
     {
-      getNextPageParam: ({ current_page, last_page }) => 
-        last_page > current_page && { page: current_page + 1 },
+      getNextPageParam: ({ current_page, last_page }) =>
+        last_page > current_page ? { page: current_page + 1 } : undefined,
     }
   );
 
@@ -111,13 +110,16 @@ export function useOrder({ tracking_number }: { tracking_number: string }) {
     [API_ENDPOINTS.ORDERS, tracking_number],
     async () => {
       const response = await client.orders.get(tracking_number);
-      return response;
+      return {
+        ...response,
+        software_keys: response?.software_keys ?? [],  // Ensure software_keys is always an array
+      };
     },
     { refetchOnWindowFocus: false }
   );
 
   return {
-    order: data ?? undefined,
+    order: data ? { ...data, software_keys: data.software_keys ?? [] } : undefined,
     isFetching,
     isLoading,
     refetch,
