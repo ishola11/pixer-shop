@@ -68,8 +68,11 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
     [API_ENDPOINTS.ORDERS_DOWNLOADS, formattedOptions],
     async ({ queryKey, pageParam }) => {
       const response = await client.orders.downloadable(Object.assign({}, queryKey[1], pageParam));
-      
-      // Ensure software keys are included
+
+      if (!response || !response.pages) {
+        return { pages: [{ data: [] }] }; 
+      }
+
       return {
         ...response,
         pages: response.pages.map((page) => ({
@@ -82,7 +85,7 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
       };
     },
     {
-      getNextPageParam: ({ current_page, last_page }) =>
+      getNextPageParam: ({ current_page, last_page }) => 
         last_page > current_page && { page: current_page + 1 },
     }
   );
@@ -90,8 +93,9 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
   function handleLoadMore() {
     fetchNextPage();
   }
+
   return {
-    downloadableFiles: data?.pages.flatMap((page) => page.data) ?? [],
+    downloadableFiles: data?.pages?.flatMap((page) => page.data) ?? [],
     isLoading,
     error,
     hasNextPage,
