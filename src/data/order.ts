@@ -79,10 +79,11 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
           ...page,
           data: page.data.map((order) => ({
             ...order,
-            software_keys: order.software_keys ?? [],
+            software_keys: order?.software_keys ?? [],
+            order: order ?? {},
           })),
         })),
-      };
+      };      
     },
     {
       getNextPageParam: ({ current_page, last_page }) => 
