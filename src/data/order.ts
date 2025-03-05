@@ -51,7 +51,10 @@ export function useOrders(options?: OrderQueryOptions) {
   };
 }
 export function useDownloadableProductOrders(options?: OrderQueryOptions) {
-  const formattedOptions = { ...options };
+  const formattedOptions = {
+    ...options,
+    // language: locale
+  };
 
   const {
     data,
@@ -63,39 +66,18 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
     isFetchingNextPage,
   } = useInfiniteQuery<OrderedFilePaginator, Error>(
     [API_ENDPOINTS.ORDERS_DOWNLOADS, formattedOptions],
-    async ({ queryKey, pageParam }) => {
-      const response = await client.orders.downloadable(
-        Object.assign({}, queryKey[1], pageParam)
-      );
-
-      if (!response || !response.pages) {
-        return { pages: [{ data: [] }] }; 
-      }
-
-      return {
-        ...response,
-        pages: response.pages.map((page) => ({
-          ...page,
-          data: page.data.map((order) => ({
-            ...order,
-            software_keys: order?.software_keys ?? [],  // Ensure software_keys is always an array
-            order: order ?? { id: null },  // Ensure order is never undefined
-          })),
-        })),
-      };
-    },
+    ({ queryKey, pageParam }) =>
+      client.orders.downloadable(Object.assign({}, queryKey[1], pageParam)),
     {
       getNextPageParam: ({ current_page, last_page }) =>
-        last_page > current_page ? { page: current_page + 1 } : undefined,
+        last_page > current_page && { page: current_page + 1 },
     }
   );
-
   function handleLoadMore() {
     fetchNextPage();
   }
-
   return {
-    downloadableFiles: data?.pages?.flatMap((page) => page.data) ?? [],
+    downloadableFiles: data?.pages.flatMap((page) => page.data) ?? [],
     isLoading,
     error,
     hasNextPage,
@@ -106,20 +88,16 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
 }
 
 export function useOrder({ tracking_number }: { tracking_number: string }) {
-  const { data, isLoading, error, isFetching, refetch } = useQuery<Order, Error>(
+  const { data, isLoading, error, isFetching, refetch } = useQuery<
+    Order,
+    Error
+  >(
     [API_ENDPOINTS.ORDERS, tracking_number],
-    async () => {
-      const response = await client.orders.get(tracking_number);
-      return {
-        ...response,
-        software_keys: response?.software_keys ?? [],  // Ensure software_keys is always an array
-      };
-    },
+    () => client.orders.get(tracking_number),
     { refetchOnWindowFocus: false }
   );
-
   return {
-    order: data ? { ...data, software_keys: data.software_keys ?? [] } : undefined,
+    order: data,
     isFetching,
     isLoading,
     refetch,
