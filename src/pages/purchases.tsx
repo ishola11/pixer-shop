@@ -30,7 +30,7 @@ import { CreditCardIcon } from '@/components/icons/credit-card-icon';
 function OrderedItem({ item }: { item: OrderedFile }) {
   const { t } = useTranslation('common');
   const { openModal } = useModalAction();
-  const { id: order_id, tracking_number } = item.order;
+  const { id: order_id, tracking_number, software_keys } = item.order; 
   const {
     id: product_id,
     shop_id,
@@ -105,6 +105,24 @@ function OrderedItem({ item }: { item: OrderedFile }) {
             >
               {t('text-preview')}
             </a>
+          )}
+          {/* ✅ Software Keys Section Under the Title */}
+          {getStatus && software_keys?.length > 0 && (
+            <div className="mt-3 border border-gray-200 p-3 rounded-md dark:border-dark-600">
+              <h4 className="mb-2 text-sm font-semibold">
+                Software License Keys
+              </h4>
+              <ul className="space-y-1">
+                {software_keys.map((key) => (
+                  <li
+                    key={key.id}
+                    className="text-xs font-mono bg-gray-100 px-2 py-1 rounded-md dark:bg-dark-400"
+                  >
+                    {key.license_key}
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
         <div className="flex items-center gap-3">
