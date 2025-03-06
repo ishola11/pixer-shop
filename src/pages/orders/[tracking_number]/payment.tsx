@@ -130,7 +130,7 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
                 </h2>
 
                 {/* Display Software Keys */}
-                {order?.software_keys?.length > 0 && (
+                {order?.payment_status === PaymentStatus.SUCCESS && order?.software_keys?.length > 0 && (
                 <div className="mt-6 border border-gray-200 p-4 rounded-md dark:border-dark-600">
                   <h3 className="mb-4 text-lg font-semibold text-dark dark:text-light">
                     Software License Keys

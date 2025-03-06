@@ -30,7 +30,8 @@ import { CreditCardIcon } from '@/components/icons/credit-card-icon';
 function OrderedItem({ item }: { item: OrderedFile }) {
   const { t } = useTranslation('common');
   const { openModal } = useModalAction();
-  const { id: order_id, tracking_number, software_keys } = item.order; 
+  const { id: order_id, tracking_number, software_keys } = item.order;
+  const isSoftware = record?.type_id === 2;
   const {
     id: product_id,
     shop_id,
@@ -127,20 +128,24 @@ function OrderedItem({ item }: { item: OrderedFile }) {
         </div>
         <div className="flex items-center gap-3">
           {getStatus ? (
-            <>
-              <button
-                className="flex items-center font-semibold text-brand hover:text-brand-dark sm:h-12 sm:rounded sm:border sm:border-light-500 sm:bg-transparent sm:py-3 sm:px-5 sm:dark:border-dark-600"
-                onClick={openReviewModal}
-              >
-                {getReview(my_review, order_id)
-                  ? t('text-update-review')
-                  : t('text-write-review')}
-              </button>
-              <Button onClick={() => mutate(item.digital_file_id)}>
-                <DownloadIcon className="h-auto w-4" />
-                {t('text-download')}
-              </Button>
-            </>
+            // If it's software, skip review & download
+            isSoftware ? null : (
+              <>
+                <button
+                  className="flex items-center font-semibold text-brand hover:text-brand-dark sm:h-12 sm:rounded sm:border sm:border-light-500 sm:bg-transparent sm:py-3 sm:px-5 sm:dark:border-dark-600"
+                  onClick={openReviewModal}
+                >
+                  {getReview(my_review, order_id)
+                    ? t('text-update-review')
+                    : t('text-write-review')}
+                </button>
+
+                <Button onClick={() => mutate(item.digital_file_id)}>
+                  <DownloadIcon className="h-auto w-4" />
+                  {t('text-download')}
+                </Button>
+              </>
+            )
           ) : (
             <PayNowButton
               tracking_number={tracking_number}

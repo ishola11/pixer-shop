@@ -130,6 +130,10 @@ export const OrderItems = ({
       align: alignLeft,
       width: 250,
       render: function RenderReview(_: any, record: any) {
+        const isSoftware = record?.type_id === 2;
+
+        if (isSoftware) return null;
+
         return (
           <div className="flex items-center justify-end gap-4">
             <button
