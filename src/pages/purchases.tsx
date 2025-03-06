@@ -31,7 +31,7 @@ function OrderedItem({ item }: { item: OrderedFile }) {
   const { t } = useTranslation('common');
   const { openModal } = useModalAction();
   const { id: order_id, tracking_number, software_keys } = item.order;
-  const isSoftware = record?.type_id === 2;
+  const isSoftware = item?.file?.fileable?.type_id === 2;
   const {
     id: product_id,
     shop_id,
