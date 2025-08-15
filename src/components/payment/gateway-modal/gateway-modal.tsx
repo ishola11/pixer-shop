@@ -22,6 +22,7 @@ import CoinbaseIcon from '@/components/icons/payment-gateways/coinbase';
 import { useIsDarkMode } from '@/lib/hooks/use-is-dark-mode';
 import { useAtom } from 'jotai';
 import { paymentGatewayAtom } from '@/components/cart/lib/checkout';
+import BlockonomicsIcon from '@/components/icons/payment-gateways/blockonomics';
 
 interface IProps {
   theme?: string;
@@ -35,7 +36,7 @@ interface PaymentMethodInformation {
   value: PaymentGateway;
   icon: any;
   darkIcon?: any;
-  component: React.FunctionComponent;
+  component: React.ComponentType<any>;
   width: number;
   height: number;
 }
@@ -55,7 +56,7 @@ const PaymentGroupOption: React.FC<PaymentGroupOptionProps> = ({
         <div
           className={cn(
             'relative flex h-[5.625rem] w-full cursor-pointer items-center justify-center rounded border bg-light-300 py-3 text-center dark:border-[#3A3A3A] dark:bg-[#303030]',
-            checked && 'border-brand dark:border-brand-dark'
+            checked && 'border-brand dark:border-brand-dark',
             // {
             //   'shadow-600 !border-gray-800 bg-light': theme === 'bw' && checked,
             // }
@@ -150,20 +151,29 @@ const PaymentGateways: React.FC<IProps> = ({
       width: 100,
       height: 52,
     },
+    BLOCKONOMICS: {
+      name: 'Blockonomics',
+      value: PaymentGateway.BLOCKONOMICS,
+      icon: <BlockonomicsIcon className="w-32" />,
+      darkIcon: <BlockonomicsIcon className="w-32" />,
+      component: PaymentOnline, // works fine; we’ll add a small tweak below
+      width: 100,
+      height: 52,
+    },
   };
   const [gateway, setGateway] = useAtom(paymentGatewayAtom);
   const [defaultGateway, setDefaultGateway] = useState(
-    settings?.defaultPaymentGateway?.toUpperCase() || ''
+    settings?.defaultPaymentGateway?.toUpperCase() || '',
   );
 
   const [availableGateway, setAvailableGateway] = useState(
-    settings?.paymentGateway || []
+    settings?.paymentGateway || [],
   );
 
   useEffect(() => {
     if (settings && availableGateway) {
       setGateway(
-        settings?.defaultPaymentGateway?.toUpperCase() as PaymentGateway
+        settings?.defaultPaymentGateway?.toUpperCase() as PaymentGateway,
       );
     }
   }, [isLoading, defaultGateway, availableGateway]);

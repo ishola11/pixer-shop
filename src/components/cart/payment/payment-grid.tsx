@@ -21,13 +21,15 @@ import { PayStackDark } from '@/components/icons/payment-gateways/paystack-dark'
 import { RazorPayDarkIcon } from '@/components/icons/payment-gateways/razorpay-dark';
 import { useAtom } from 'jotai';
 import CoinbaseIcon from '@/components/icons/payment-gateways/coinbase';
+import BlockonomicsIcon from '@/components/icons/payment-gateways/blockonomics';
+import PaymentBlockonomics from '@/components/cart/payment/payment-blockonomics';
 
 interface PaymentMethodInformation {
   name: string;
   value: PaymentGateway;
   icon: any;
   darkIcon?: any;
-  component: React.FunctionComponent;
+  component: React.ComponentType<any>;
   width: number;
   height: number;
 }
@@ -48,7 +50,7 @@ export const PaymentGroupOption: React.FC<PaymentGroupOptionProps> = ({
         <div
           className={cn(
             'relative flex h-[5.625rem] w-full cursor-pointer items-center justify-center rounded border bg-light-300 py-3 text-center dark:border-[#3A3A3A] dark:bg-[#303030]',
-            checked && 'border-brand dark:border-brand-dark'
+            checked && 'border-brand dark:border-brand-dark',
             // {
             //   'shadow-600 !border-gray-800 bg-light': theme === 'bw' && checked,
             // }
@@ -79,12 +81,13 @@ const PaymentGrid: React.FC<{ className?: string; theme?: 'bw' }> = ({
   const { settings, isLoading } = useSettings();
 
   const [defaultGateway, setDefaultGateway] = useState(
-    settings?.defaultPaymentGateway?.toUpperCase() || ''
+    settings?.defaultPaymentGateway?.toUpperCase() || '',
   );
 
   const [availableGateway, setAvailableGateway] = useState(
-    settings?.paymentGateway || []
+    settings?.paymentGateway || [],
   );
+  const Noop: React.FC = () => null;
 
   // FixME
   // @ts-ignore
@@ -155,12 +158,21 @@ const PaymentGrid: React.FC<{ className?: string; theme?: 'bw' }> = ({
       width: 100,
       height: 52,
     },
+    BLOCKONOMICS: {
+      name: 'Blockonomics',
+      value: PaymentGateway.BLOCKONOMICS,
+      icon: <BlockonomicsIcon className="w-32" />,
+      darkIcon: <BlockonomicsIcon className="w-32" />,
+      component: Noop,
+      width: 100,
+      height: 52,
+    },
   };
 
   useEffect(() => {
     if (settings && availableGateway) {
       setGateway(
-        settings?.defaultPaymentGateway?.toUpperCase() as PaymentGateway
+        settings?.defaultPaymentGateway?.toUpperCase() as PaymentGateway,
       );
     }
   }, [isLoading, defaultGateway, availableGateway]);
@@ -212,10 +224,15 @@ const PaymentGrid: React.FC<{ className?: string; theme?: 'bw' }> = ({
             />
           )} */}
         </div>
+        <div className="mb-5">
+          {gateway === PaymentGateway.BLOCKONOMICS ? null : <Component />}
+        </div>
       </RadioGroup>
-      {/* <div className="mb-5">
-        <Component />
-      </div> */}
+      {
+        <div className="mb-5">
+          <Component />
+        </div>
+      }
     </div>
   );
 };
